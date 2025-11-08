@@ -8,7 +8,6 @@ import torch.nn.functional as F
 from torchvision import transforms, models
 from werkzeug.utils import secure_filename
 
-
 UPLOAD_FOLDER = "uploads"
 WEIGHTS_PATH = os.path.join("weights", "classifier.pth")  
 CLASS_NAMES = ["without_mask", "with_mask"]
@@ -96,10 +95,6 @@ def annotate_and_save(img_path, label_text, dest_dir=None):
 
 
 def predict_image(img_path, debug=True):
-    """
-    Returns: (label, conf, probs_list, annotated_path)
-    probs_list is list of (class_name, prob)
-    """
     img = Image.open(img_path).convert("RGB")
     inp = transform(img).unsqueeze(0).to(DEVICE)
     with torch.no_grad():
@@ -115,9 +110,7 @@ def predict_image(img_path, debug=True):
         print("[DEBUG] Prediction debug info for:", img_path)
         for name, p in probs_list:
             print(f"    {name}: {p:.6f}")
-        print(f"    -> Predicted: {label} ({conf:.6f})")
-
-    # annotate and save preview image inside uploads directory
+        print(f"  Predicted: {label} ({conf:.6f})")
     annotated_path = annotate_and_save(img_path, f"{label} ({conf*100:.1f}%)", dest_dir=app.config["UPLOAD_FOLDER"])
     annotated_filename = Path(annotated_path).name
     return label, conf, probs_list, annotated_filename
@@ -218,9 +211,9 @@ def index():
 def uploaded_file(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
