@@ -63,10 +63,10 @@ def plot_and_save_confusion_matrix(y_true, y_pred, labels, out_path):
 def main():
     weights = find_trained_weights()
     if weights:
-        print("[INFO] Using trained weights:", weights)
+        print("Using trained weights:", weights)
         model_path = weights
     else:
-        print("[WARN] No trained weights found. Using pretrained 'yolov8n.pt' for demo inference.")
+        print("No trained weights found. Using pretrained 'yolov8n.pt' for demo inference.")
         model_path = "yolov8n.pt"
 
     model = YOLO(model_path)
@@ -75,7 +75,7 @@ def main():
     if not val_imgs:
         val_imgs = sorted(glob.glob(os.path.join(DATA_ROOT, "images", "valid", "*.jpg")))
     if not val_imgs:
-        print("[ERROR] No validation images found.")
+        print("No validation images found.")
         return
 
     gt_list = []
@@ -115,7 +115,7 @@ def main():
         out_file = os.path.join(OUT_DIR, base + "_pred.jpg")
         draw_boxes_and_save(img_path, preds, out_file)
 
-    print("[INFO] Annotated output images saved to:", OUT_DIR)
+    print("Annotated output images saved to:", OUT_DIR)
 
     if len(gt_list) > 0:
         cm_path = os.path.join(OUT_DIR, "confusion_matrix.png")
@@ -125,11 +125,12 @@ def main():
             CLASS_NAMES + ["no_detection"],
             cm_path,
         )
-        print("[INFO] Confusion matrix saved to:", cm_path)
+        print("Confusion matrix saved to:", cm_path)
     else:
-        print("[WARN] No data available to compute confusion matrix.")
+        print("No data available to compute confusion matrix.")
 
 
 if __name__ == "__main__":
     main()
+
 
