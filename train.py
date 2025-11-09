@@ -13,15 +13,16 @@ os.environ["ULTRALYTICS_RUN_NAME"] = NAME
 
 def main():
     if not os.path.exists(DATA_YAML):
-        print("[ERROR] data.yaml not found at", DATA_YAML)
+        print("data.yaml not found at", DATA_YAML)
         return
-    print("[INFO] Loading model:", MODEL)
+    print("Loading model:", MODEL)
     model = YOLO(MODEL)
-    print("[INFO] Starting training — this can take a while.")
+    print("Starting training.")
     model.train(data=DATA_YAML, epochs=EPOCHS, imgsz=IMGSZ, batch=BATCH, project=PROJECT, name=NAME)
-    print("[INFO] Training finished. Check runs/detect/<name>/ for outputs")
+    print("Training finished. Check runs/detect/<name>/ for outputs")
 
 if __name__ == "__main__":
     main()
+
 
 
