@@ -128,7 +128,7 @@ model = models.efficientnet_b0(pretrained=True)
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, 2)
 ```
 
-🧑‍🏫 Trained for **10–20 epochs** using **Adam optimizer**  
+🧑‍🏫 Trained for **2-10 epochs** using **Adam optimizer**  
 💾 Saved as:
 ```
 models/efficientnet_b0.pth
