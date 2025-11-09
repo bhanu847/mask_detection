@@ -41,12 +41,12 @@ def load_model():
                 new_key = k.replace("module.", "") if k.startswith("module.") else k
                 new_state[new_key] = v
             model.load_state_dict(new_state, strict=False)
-            print(f"[INFO] Loaded custom weights from {WEIGHTS_PATH}")
+            print(f"Loaded custom weights from {WEIGHTS_PATH}")
         except Exception as e:
-            print(f"[WARN] Could not load custom weights: {e}")
-            print("[INFO] Using ImageNet-pretrained EfficientNet-B0 (last layer adapted).")
+            print(f"Could not load custom weights: {e}")
+            print("Using ImageNet-pretrained EfficientNet-B0...last layer adapted.")
     else:
-        print("[INFO] No custom weights found — using ImageNet-pretrained model (last layer adapted).")
+        print("No custom weights found...using ImageNet-pretrained model..last layer adapted.")
 
     model.to(DEVICE)
     model.eval()
@@ -61,16 +61,13 @@ transform = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406],
                          [0.229, 0.224, 0.225])
 ])
-
 def annotate_and_save(img_path, label_text, dest_dir=None):
     img = Image.open(img_path).convert("RGB")
     draw = ImageDraw.Draw(img)
-
     try:
         font = ImageFont.truetype("DejaVuSans-Bold.ttf", size=28)
     except Exception:
         font = ImageFont.load_default()
-
     text = label_text
     padding = 8
     try:
@@ -78,13 +75,10 @@ def annotate_and_save(img_path, label_text, dest_dir=None):
         w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
     except AttributeError:
         w, h = draw.textsize(text, font=font)
-
     rect_x0, rect_y0 = 10, 10
     rect_x1, rect_y1 = rect_x0 + w + padding * 2, rect_y0 + h + padding * 2
-
     draw.rectangle([(rect_x0, rect_y0), (rect_x1, rect_y1)], fill=(255, 255, 255, 230))
     draw.text((rect_x0 + padding, rect_y0 + padding), text, fill=(0, 0, 0), font=font)
-
     p = Path(img_path)
     annotated_name = f"{p.stem}_annotated{p.suffix}"
     if dest_dir is None:
@@ -92,20 +86,16 @@ def annotate_and_save(img_path, label_text, dest_dir=None):
     dest_path = Path(dest_dir) / annotated_name
     img.save(dest_path)
     return str(dest_path)
-
-
 def predict_image(img_path, debug=True):
     img = Image.open(img_path).convert("RGB")
     inp = transform(img).unsqueeze(0).to(DEVICE)
     with torch.no_grad():
         logits = model(inp)
         probs = F.softmax(logits, dim=1).cpu().numpy()[0]
-
     probs_list = list(zip(CLASS_NAMES, probs.tolist()))
     idx = int(probs.argmax())
     label = CLASS_NAMES[idx]
     conf = float(probs[idx])
-
     if debug:
         print("[DEBUG] Prediction debug info for:", img_path)
         for name, p in probs_list:
@@ -196,13 +186,11 @@ def index():
         file = request.files["file"]
         if file.filename == "":
             return redirect(url_for("index"))
-
         filename = secure_filename(file.filename)
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         save_name = f"{Path(filename).stem}_{ts}{Path(filename).suffix}"
         save_path = os.path.join(app.config["UPLOAD_FOLDER"], save_name)
         file.save(save_path)
-
         label, conf, probs, annotated_filename = predict_image(save_path)
         return render_template_string(RESULT_HTML, filename=annotated_filename, label=label, conf=conf, probs=probs)
     return render_template_string(INDEX_HTML)
@@ -213,6 +201,7 @@ def uploaded_file(filename):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
 
 
