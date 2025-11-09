@@ -231,13 +231,4 @@ face-mask-detection/
 
 ---
 
-### 💬 **Future Improvements**
-- 🚀 Add live webcam detection  
-- ☁️ Deploy on Render / AWS / Hugging Face Spaces  
-- 📱 Build a Streamlit dashboard  
-
----
-
 ### 👨‍💻 **Created by Bharat Sharma**
-> B.Tech ECE @ AKGEC • Python Developer Intern @ RxAdvance  
-> 💬 *“From dataset to deployment — all in one neat AI pipeline.”*
