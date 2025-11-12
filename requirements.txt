@@ -1,0 +1,12 @@
+numpy
+opencv-python-headless
+pillow
+PyYAML
+tqdm
+scikit-learn
+albumentations
+ultralytics>=8.0.0
+streamlit
+matplotlib
+tensorboard
+wandb
